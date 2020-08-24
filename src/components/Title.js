@@ -3,9 +3,10 @@ import React from 'react';
 const Title = () => {
   return (
     <div className="title">
-      <h1>BreadBook</h1>
-      <h2>Your Pictures</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+      <div className="flex flex-col text-center w-full mb-20">
+        <h1 className="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">BreadBook</h1>
+        <p className="lg:w-2/3 mx-auto leading-relaxed text-base">Your Pictures</p>
+      </div>
     </div>
   )
 };
