@@ -6,7 +6,7 @@ const ProgressBar = ({ progress }) => {
     width: `${progress}%`,
   };
   return (
-    <motion.div className="progress-bar" initial={{ width: 0 }} animate={style}/>
+    <motion.div className="fixed top-0 left-0 h-2 bg-indigo-600" initial={{ width: 0 }} animate={style}/>
   );
 };
 
