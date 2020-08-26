@@ -5,7 +5,7 @@ import ImageGrid from './ImageGrid';
 const Share = () => {
   return (
     <>
-      <UploadForm />
+      <UploadForm className="mb-12"/>
       <ImageGrid />
     </>
   );

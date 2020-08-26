@@ -1,28 +1,44 @@
-import React from 'react';
+import React, { useState } from 'react';
 import useFirestore from '../hooks/useFirestore';
 import { motion } from 'framer-motion';
 
+const imageAnimation = {
+  hovered: { y: -75, scale: 0.75 },
+  unHovered: { y: 0, scale: 1 },
+};
+
+const detailsAnimation = {
+  hovered: { scaleX: 1.05, scaleY: 1.5 },
+  unHovered: { scaleX: 1, scaleY: 1 },
+};
+
 const ImageGrid = () => {
   const docs = useFirestore('images');
-  // const onImageClick = () => setSelectedImage(doc.url);
-  return (
-    <div className="flex flex-wrap -m-4">
-      { docs && docs.map(((doc) => (
-        <motion.div className="lg:w-1/3 sm:w-1/2 p-4" key={doc.id} layout whileHover={{ opacity: 1 }}>
-          <div className="flex relative">
-            <motion.img src={doc.url} alt="uploaded pic" className="absolute inset-0 w-full h-full object-cover object-center rounded-lg shadow-xl"
-              initial={{ opacity: 0}}
-              animate={{ opacity: 1}}
-              transition={{ delay: 1 }}
-            />
-            <div className="px-8 py-10 relative z-10 w-full bg-white opacity-0 hover:opacity-100 rounded-lg">
-              <h2 className="tracking-widest text-sm title-font font-medium text-indigo-500 mb-1">THE SUBTITLE</h2>
-              <h1 className="title-font text-lg font-medium text-gray-900 mb-3">Shooting Stars</h1>
+  const [hovered, setHovered] = useState();
+  const renderImage = (doc) => {
+    const imageHovered = hovered === doc.id;
+    return (
+      <motion.div className="p-4 h-full w-full" key={doc.id} layout onMouseEnter={() => setHovered(doc.id)} onMouseLeave={(() => setHovered(undefined))}>
+        <div className="relative h-full w-full">
+          <motion.img src={doc.url} alt="uploaded pic" className="absolute inset-0 w-full h-full object-cover object-center rounded-lg z-20"
+                      animate={imageHovered ? 'hovered' : 'unHovered'} variants={imageAnimation}
+          />
+          {imageHovered && (
+            <div className="absolute z-10 w-full h-full flex flex-col items-center justify-end">
+              <h2 className="tracking-widest text-sm title-font font-medium text-indigo-500 mb-1 uppercase">{doc.title}</h2>
               <p className="leading-relaxed">{doc.description}</p>
             </div>
-          </div>
-        </motion.div>
-      )))}
+          )}
+          <motion.div className="w-30 h-56 relative z-0 w-full bg-white rounded-lg shadow-xl"
+                      animate={imageHovered ? 'hovered' : 'unHovered'} variants={detailsAnimation} />
+        </div>
+      </motion.div>
+    );
+  };
+
+  return (
+    <div className="grid grid-cols-3">
+      { docs && docs.map((doc) => renderImage(doc)) }
     </div>
   );
 };

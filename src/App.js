@@ -8,13 +8,12 @@ import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
-
   return (
     <>
       <Router>
         <ProvideAuth>
           <Header />
-          <section className="text-gray-700 body-font">
+          <section className="h-full text-gray-700 body-font">
             <div className="container px-5 py-24 mx-auto">
               <Switch>
                 <ProtectedRoute path="/share">
