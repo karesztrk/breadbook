@@ -12,21 +12,21 @@ const useStorage = ({ file, title = '', description = '' }) => {
       const collectionRef = projectFirestore.collection('images');
       storageRef.put(file).on('state_changed', (snapshot) => {
         setProgress((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-      }, (error) => {
-        setError(error);
+      }, (e) => {
+        setError(e);
       }, async () => {
-        const url = await storageRef.getDownloadURL();
+        const downloadUrl = await storageRef.getDownloadURL();
         const createdAt = timestamp();
         collectionRef.add({
-          url,
+          downloadUrl,
           createdAt,
           title,
           description,
         });
-        setUrl(url);
+        setUrl(downloadUrl);
       });
     }
-  }, [file, description]);
+  }, [file, description, title]);
 
   return { progress, url, error };
 };
