@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useEffect, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import useFirestore from '../hooks/useFirestore';
+import ImageItem from './ImageItem';
 
 const itemAnimation = {
-  hovered: { zIndex: 100 },
+  hovered: { zIndex: 40 },
   unHovered: { zIndex: 1 },
 };
 
@@ -20,6 +21,27 @@ const backgroundAnimation = {
 const ImageGrid = () => {
   const docs = useFirestore('images');
   const [hovered, setHovered] = useState();
+  const [loaded, setLoaded] = useState(false);
+  // {"title":"Croissant","description":"Párom kérésére készítettem először ezt a friss, ropogós péksüteményt.","url":"https://firebasestorage.googleapis.com/v0/b/breadbook-72aaf.appspot.com/o/IMG_20200517_152223.jpg?alt=media&token=466a4fc9-158e-4f39-87a9-d828827ccf03","createdAt":{"seconds":1598464597,"nanoseconds":355000000},"id":"u4e6MgRj2PT77qqEodBS"}
+  const [selected, setSelected] = useState();
+
+  useEffect(() => {
+    if (docs.length > 0) {
+      const preload = docs.map((doc) => new Promise((resolve, reject) => {
+        const image = new Image();
+        image.src = doc.url;
+        image.onload = resolve();
+        image.onerror = reject();
+      }));
+      Promise.all(preload).then(() => setLoaded(true));
+    }
+  }, [docs]);
+
+  const onItemClick = (doc) => {
+    setHovered(undefined);
+    setSelected(doc);
+  };
+
   const renderImage = (doc) => {
     const itemHovered = hovered === doc.id;
     return (
@@ -31,6 +53,8 @@ const ImageGrid = () => {
         onHoverEnd={() => setHovered(undefined)}
         animate={itemHovered ? 'hovered' : 'unHovered'}
         variants={itemAnimation}
+        onClick={() => onItemClick(doc)}
+        layoutId={`card-container-${doc.id}`}
       >
         <div className="relative w-30 h-56 ">
           <motion.img
@@ -39,15 +63,17 @@ const ImageGrid = () => {
             className="absolute inset-0 w-full h-full object-cover object-center rounded-lg z-20"
             animate={itemHovered ? 'hovered' : 'unHovered'}
             variants={imageAnimation}
+            onLoad={() => setLoaded(true)}
+            layoutId={`card-image-${doc.id}`}
           />
           {itemHovered && (
-            <div className="absolute z-10 w-full h-full flex flex-col items-center justify-end transform translate-y-5">
-              <h2
-                className="tracking-widest text-sm title-font font-medium text-indigo-500 mb-1 uppercase"
-              >
+            <div
+              className="absolute z-10 w-full h-full flex flex-col items-center justify-end transform translate-y-5"
+            >
+              <motion.h2 className="ttitle-font text-lg font-medium text-gray-900 mb-3 uppercase" layoutId={`card-title-${doc.id}`}>
                 {doc.title}
-              </h2>
-              <p className="hidden lg:block leading-relaxed text-sm text-center">{doc.description}</p>
+              </motion.h2>
+              <motion.p className="hidden lg:block w-full leading-relaxed mb-3 text-center truncate" layoutId={`card-description-${doc.id}`}>{doc.description}</motion.p>
             </div>
           )}
           <motion.div
@@ -61,9 +87,21 @@ const ImageGrid = () => {
   };
 
   return (
-    <div className="grid grid-cols-3">
-      {docs && docs.map((doc) => renderImage(doc))}
-    </div>
+    <>
+      <div className="grid grid-cols-3">
+        {loaded && docs.map((doc) => renderImage(doc))}
+      </div>
+      {!loaded && <div>Loading...</div>}
+      {selected && (
+        <AnimatePresence>
+          <ImageItem
+            item={selected}
+            onOverlayClick={() => setSelected(undefined)}
+            key="item"
+          />
+        </AnimatePresence>
+      )}
+    </>
   );
 };
 

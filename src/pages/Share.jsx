@@ -1,6 +1,6 @@
 import React from 'react';
-import UploadForm from './UploadForm';
-import ImageGrid from './ImageGrid';
+import UploadForm from '../components/UploadForm';
+import ImageGrid from '../components/ImageGrid';
 
 const Share = () => (
   <>
