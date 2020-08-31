@@ -96,7 +96,7 @@ const ImageGrid = () => {
         <AnimatePresence>
           <ImageItem
             item={selected}
-            onOverlayClick={() => setSelected(undefined)}
+            onCloseClick={() => setSelected(undefined)}
             key="item"
           />
         </AnimatePresence>
