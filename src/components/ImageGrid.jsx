@@ -22,7 +22,6 @@ const ImageGrid = () => {
   const docs = useFirestore('images');
   const [hovered, setHovered] = useState();
   const [loaded, setLoaded] = useState(false);
-  // {"title":"Croissant","description":"Párom kérésére készítettem először ezt a friss, ropogós péksüteményt.","url":"https://firebasestorage.googleapis.com/v0/b/breadbook-72aaf.appspot.com/o/IMG_20200517_152223.jpg?alt=media&token=466a4fc9-158e-4f39-87a9-d828827ccf03","createdAt":{"seconds":1598464597,"nanoseconds":355000000},"id":"u4e6MgRj2PT77qqEodBS"}
   const [selected, setSelected] = useState();
 
   useEffect(() => {
@@ -56,7 +55,7 @@ const ImageGrid = () => {
         onClick={() => onItemClick(doc)}
         layoutId={`card-container-${doc.id}`}
       >
-        <div className="relative w-30 h-56 ">
+        <div className="relative w-30 h-56 cursor-pointer">
           <motion.img
             src={doc.url}
             alt="uploaded pic"
@@ -73,11 +72,10 @@ const ImageGrid = () => {
               <motion.h2 className="ttitle-font text-lg font-medium text-gray-900 mb-3 uppercase" layoutId={`card-title-${doc.id}`}>
                 {doc.title}
               </motion.h2>
-              <motion.p className="hidden lg:block w-full leading-relaxed mb-3 text-center truncate" layoutId={`card-description-${doc.id}`}>{doc.description}</motion.p>
             </div>
           )}
           <motion.div
-            className="absolute w-full h-full z-0 bg-white rounded-lg shadow-xl"
+            className="absolute w-full h-full z-0 bg-white rounded-lg shadow-2xl"
             animate={itemHovered ? 'hovered' : 'unHovered'}
             variants={backgroundAnimation}
           />
@@ -96,7 +94,7 @@ const ImageGrid = () => {
         <AnimatePresence>
           <ImageItem
             item={selected}
-            onOverlayClick={() => setSelected(undefined)}
+            onCloseClick={() => setSelected(undefined)}
             key="item"
           />
         </AnimatePresence>

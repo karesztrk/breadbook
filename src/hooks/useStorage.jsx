@@ -1,7 +1,12 @@
 import { useState, useEffect } from 'react';
 import { projectStorage, projectFirestore, timestamp } from '../firebase/config';
 
-const useStorage = ({ file, title = '', description = '' }) => {
+const useStorage = ({
+  file,
+  title = '',
+  description = '',
+  ingredients = [],
+}) => {
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState();
   const [url, setUrl] = useState();
@@ -18,15 +23,16 @@ const useStorage = ({ file, title = '', description = '' }) => {
         const downloadUrl = await storageRef.getDownloadURL();
         const createdAt = timestamp();
         collectionRef.add({
-          downloadUrl,
+          url: downloadUrl,
           createdAt,
           title,
           description,
+          ingredients,
         });
         setUrl(downloadUrl);
       });
     }
-  }, [file, description, title]);
+  }, [file, description, title, ingredients]);
 
   return { progress, url, error };
 };
