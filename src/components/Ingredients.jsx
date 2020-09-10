@@ -1,54 +1,25 @@
 import React from 'react';
+import { ingredientTypes } from './UploadForm';
 
-const LIQUID_TYPE = 'liquid';
-const FLOUR_TYPE = 'flour';
-
-const Ingredients = ({ data }) => {
-  const calculateSummary = () => data.reduce((accumulator, currentValue) => {
-    if (currentValue.type === FLOUR_TYPE) {
-      accumulator.flour += currentValue.quantity;
-    } else if (currentValue.type === LIQUID_TYPE) {
-      accumulator.liquid += currentValue.quantity;
-    }
-    return accumulator;
-  }, {
-    flour: 0,
-    liquid: 0,
-  });
-
-  const { liquid, flour } = calculateSummary();
-  const hydro = (liquid / flour) * 100;
-  return (
-    data && (
-      <div>
-        <table>
-          <thead>
-            <tr>
-              <td>Name</td>
-              <td>Type</td>
-              <td>Quantity</td>
-              <td>Unit</td>
-            </tr>
-          </thead>
-          {data.map(({
-            name, type, quantity, unit,
-          }) => (
-            <tr>
-              <td>{name}</td>
-              <td>{type}</td>
-              <td>{quantity}</td>
-              <td>{unit || 'gram'}</td>
-            </tr>
-          ))}
-        </table>
-        <div>
-          <span>Hydratation</span>
-          &nbsp;
-          <span>{`${hydro}%`}</span>
-        </div>
-      </div>
-    )
-  );
-};
+const Ingredients = ({ data = [], variant = 'light' }) => (
+  data.length > 0 && (
+    <ul className="mx-8">
+      {data.map((ingredient, index) => {
+        const type = ingredientTypes.find((i) => ingredient.type === i.name);
+        const typeLabel = type ? type.label : ingredient.type;
+        const last = index === data.length - 1;
+        return (
+          <li className={`flex border-t border-gray-300 py-2 ${last ? 'border-b' : ''}`}>
+            <span className="text-gray-500">{ingredient.name}</span>
+            &nbsp;
+            <span className="text-gray-500">{`(${typeLabel})`}</span>
+            &nbsp;
+            <span className={`ml-auto ${variant === 'light' ? 'text-gray-900' : 'text-white'}`}>{`${ingredient.amount} gram`}</span>
+          </li>
+        );
+      })}
+    </ul>
+  )
+);
 
 export default Ingredients;
