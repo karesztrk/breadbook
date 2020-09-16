@@ -12,7 +12,7 @@ const App = () => (
   <Router>
     <ProvideAuth>
       <Header />
-      <section className="h-full text-gray-700 body-font">
+      <section className="h-auto text-gray-700 body-font">
         <div className="container px-5 py-24 mx-auto">
           <AnimateSharedLayout type="crossfade">
             <Switch>
