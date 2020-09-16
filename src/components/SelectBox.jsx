@@ -8,7 +8,7 @@ const SelectBox = ({ options = [], onChange, value }) => (
         onChange={(e) => onChange(e.target.value)}
         value={value}
       >
-        {options.map(({ name, label }) => <option value={name}>{label}</option>)}
+        {options.map(({ name, label }) => <option key={name} value={name}>{label}</option>)}
       </select>
       <span
         className="absolute right-0 top-0 h-full w-10 text-center text-gray-600 pointer-events-none flex items-center justify-center"
