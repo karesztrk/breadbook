@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ProgressBar from './ProgressBar';
 import useStorage from '../hooks/useStorage';
 import SelectBox from './SelectBox';
@@ -34,6 +34,7 @@ const UploadForm = ({ className }) => {
   const [error, setError] = useState();
   const [payload, setPayload] = useState({});
   const { url, progress } = useStorage(payload);
+  const fileInputRef = useRef();
 
   useEffect(() => {
     if (url) {
@@ -42,6 +43,7 @@ const UploadForm = ({ className }) => {
       setFile(undefined);
       setIngredients([]);
       setPayload({});
+      fileInputRef.current.value = '';
     }
   }, [url, setFile]);
 
@@ -139,7 +141,7 @@ const UploadForm = ({ className }) => {
             );
           })}
         </ul>
-        <input className="mb-4" type="file" onChange={onFileChange} value={file} />
+        <input className="mb-4" ref={fileInputRef} type="file" onChange={onFileChange} />
         <button
           type="button"
           onClick={onUploadClick}

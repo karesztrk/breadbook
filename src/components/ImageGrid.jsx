@@ -58,7 +58,7 @@ const ImageGrid = () => {
         <div className="relative w-30 h-56 cursor-pointer">
           <motion.img
             src={doc.url}
-            alt="uploaded pic"
+            alt={doc.title}
             className="absolute inset-0 w-full h-full object-cover object-center rounded-lg z-20"
             animate={itemHovered ? 'hovered' : 'unHovered'}
             variants={imageAnimation}
