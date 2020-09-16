@@ -139,7 +139,7 @@ const UploadForm = ({ className }) => {
             );
           })}
         </ul>
-        <input className="mb-4" type="file" onChange={onFileChange} />
+        <input className="mb-4" type="file" onChange={onFileChange} value={file} />
         <button
           type="button"
           onClick={onUploadClick}

@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import Ingredients from './Ingredients';
 import DistributionBar from './DistributionBar';
 
+const spring = { type: 'spring', mass: 2, damping: 20 };
 const ImageItem = ({ item, onCloseClick }) => {
   const {
     id, url, title, description, ingredients,
@@ -42,7 +43,7 @@ const ImageItem = ({ item, onCloseClick }) => {
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: '100%' }}
-            transition={{ ease: 'easeOut', delay: 0.25 }}
+            transition={spring}
           >
             <DistributionBar data={ingredients} />
           </motion.div>
